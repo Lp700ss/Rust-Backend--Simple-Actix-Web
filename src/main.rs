@@ -1,5 +1,7 @@
+use actix_web::http::StatusCode;
 use actix_web::{dev::Server, get, web, App, HttpServer, Responder};
-use actix_web::web::Path;
+use actix_web::web::{Json, Path};
+use serde::Serialize;
 
 #[get("/home")]
 async fn home() -> impl Responder {
@@ -9,8 +11,24 @@ async fn home() -> impl Responder {
 
 #[get("/hello/{firstname}/{lastname}")]
 async fn hello_user(params: Path<(String, String)>) -> impl Responder {
-    let response: String = format!("Hello {} {}", params.0, params.1);
-    response
+    let response: User = User::new( params.0.clone(), params.1.clone());
+    (Json(response), StatusCode::OK)
+}
+
+
+#[derive(Serialize)]
+struct User {
+    first_name: String,
+    last_name: String
+}
+
+impl User {
+    fn new(firstname: String, lastname: String) -> Self {
+        Self {
+            first_name: firstname,
+            last_name: lastname,
+        }
+    }
 }
 
 #[actix_web::main]
