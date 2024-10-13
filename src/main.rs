@@ -15,11 +15,11 @@ async fn hello_user(params: Path<(String, String)>) -> impl Responder {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    let server: Server = HttpServer::new(|| {
+    let server: Server = HttpServer::new(|| 
         App::new()
             .service(home)
             .service(hello_user)
-    })
+    )
     .bind(("127.0.0.1", 8080))?
     .run();
     println!("server is running in 127.0.0.1::8080");
